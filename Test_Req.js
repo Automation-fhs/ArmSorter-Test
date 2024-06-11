@@ -1,4 +1,3 @@
-//Testing
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const express = require('express');
@@ -31,7 +30,6 @@ app.get('/api/package/:id', (req, res) => {
     sort(id);
     res.status(200).json({
         status: "success",
-
     });
     res.end();
 });
