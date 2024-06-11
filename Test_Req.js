@@ -8,7 +8,6 @@ require(`${__dirname}/PortEvent.js`)
 
 dotenv.config({path: './config.env'});
 
-//
 //---------------Connect to database-----------------
 mongoose
     .connect(process.env.DATABASE_LOCAL)
