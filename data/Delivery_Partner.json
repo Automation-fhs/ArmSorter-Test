@@ -1,0 +1,32 @@
+[
+  {
+    "id": 0,
+    "partnerName": "Snappy",
+    "port": 1
+  },
+  {
+    "id": 1,
+    "partnerName": "NinjaVan",
+    "port": 2
+  },
+  {
+    "id": 2,
+    "partnerName": "Ahamove",
+    "port": 3
+  },
+  {
+    "id": 3,
+    "partnerName": "VietnamPost",
+    "port": 4
+  },
+  {
+    "id": 4,
+    "partnerName": "VietelPost",
+    "port": 5
+  },
+  {
+    "id": 5,
+    "partnerName": "Lalamove",
+    "port": 6
+  }
+]
