@@ -24,6 +24,32 @@ async function sort(id) {
     event.emit("armID", partner.deliveryPartner);
 }
 
+async function dbupdate(id, dPartner, res) {
+    const partner = await PackageSchema.findOne({pid: id});
+    if(partner == null) {
+        const newPackage = new PackageSchema({
+            pid: id,
+            deliveryPartner: dPartner
+        });
+        newPackage.save();
+        res.status(200).json({
+            status: "success",
+            data: {
+                pid: id,
+                deliveryPartner: dPartner
+            }
+        })
+        res.end();
+    }
+    else {
+        res.status(406).json({
+            status: "error",
+            message: "Package id already exist!"
+        })
+        res.end();
+    }
+}
+
 // -------Get Delivery Partner from Package ID from server---------
 app.get('/api/package/:id', (req, res) => {
     const id = req.params.id*1;
@@ -34,6 +60,12 @@ app.get('/api/package/:id', (req, res) => {
     });
     res.end();
 });
+
+app.get('/api/newpackage', (req, res) => {
+    const id = req.query.id*1;
+    const dPartner = req.query.dp;
+    dbupdate(id, dPartner, res);
+})
 
 const port = 3030;
 app.listen(port, () => {
