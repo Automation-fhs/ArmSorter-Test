@@ -9,9 +9,14 @@ require(`${__dirname}/PortEvent.js`)
 
 dotenv.config({path: './config.env'});
 
+const DB = process.env.DATABASE_LOCAL
+                .replace('<USER>',process.env.USER)
+                .replace('<PWD>',process.env.PASSWORD)
+                .replace('<DBS>',process.env.DATABASE);
+
 //---------------Connect to database-----------------
 mongoose
-    .connect(process.env.DATABASE_LOCAL)
+    .connect(DB)
     .then(connect=> {
     //console.log(connect.connections);
     console.log("DB connected!");
