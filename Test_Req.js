@@ -25,10 +25,23 @@ mongoose
     //console.log(mongoose.package.find(id=1));
     });
 
-async function sort(id) {
+async function sort(id, res) {
     const partner = await PackageSchema.findOne({pid: id});
-    console.log(partner.deliveryPartner);
-    event.emit("armID", partner.deliveryPartner);
+    if(partner == null) {
+        res.status(400).json({
+            status: "error",
+            message: `No package with pid ${id}!`
+        })
+    }
+    else {
+        console.log(partner.deliveryPartner);
+        event.emit("armID", partner.deliveryPartner);
+        res.status(200).json({
+            status: "success",
+            message: `Redirect package to ${partner.deliveryPartner}`
+        })
+    }
+    res.end();
 }
 
 async function dbupdate(id, dPartner, res) {
@@ -41,31 +54,27 @@ async function dbupdate(id, dPartner, res) {
         newPackage.save();
         res.status(200).json({
             status: "success",
+            message: "New package registered",
             data: {
                 pid: id,
                 deliveryPartner: dPartner
             }
         })
-        res.end();
     }
     else {
-        res.status(406).json({
+        res.status(409).json({
             status: "error",
             message: "Package id already exist!"
         })
-        res.end();
     }
+    res.end();
 }
 
 // -------Get Delivery Partner from Package ID from server---------
 app.get('/api/package/:id', (req, res) => {
     const id = req.params.id*1;
     console.log("Requesting");
-    sort(id);
-    res.status(200).json({
-        status: "success",
-    });
-    res.end();
+    sort(id, res);
 });
 
 app.get('/api/newpackage', (req, res) => {
@@ -78,4 +87,3 @@ const port = 3030;
 app.listen(port, () => {
     console.log(`App running on port ${port}`);
 });
-
