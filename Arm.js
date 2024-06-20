@@ -1,9 +1,10 @@
 const fs = require('fs');
 const data = fs.readFileSync(`${__dirname}/data/Delivery_Partner.json`, 'utf-8');
 const dataObj = JSON.parse(data);
-const deliPartner = dataObj.map(el => {return el.partnerName});
+const deliPartner = dataObj.map(el => { return el.partnerName });
+const { exec } = require('child_process');
 
-let availableMotorVoltage = [5,9,12,24,36,48,96,110,220];
+let availableMotorVoltage = [5, 9, 12, 24, 36, 48, 96, 110, 220];
 let limitDistance = [0, 20];
 
 class Arm {
@@ -12,7 +13,7 @@ class Arm {
     #deli_ptnr;
     #motor_V;
     #motor_Enc_Res;
-    constructor(position, delivery_partner){
+    constructor(position, delivery_partner) {
         this.#port = position;
         this.#deli_ptnr = delivery_partner;
         this.#motor_V = 24;
@@ -34,28 +35,28 @@ class Arm {
         return this.#port_Distance;
     }
     set newDeliveryPartner(deliveryPartner) {
-        if(deliPartner.includes(deliveryPartner))
+        if (deliPartner.includes(deliveryPartner))
             this.#deli_ptnr = deliveryPartner;
-        else 
+        else
             alert(`${deliveryPartner} is not a Delivery Partner!`);
     }
     set newMotorVoltage(voltage) {
-        if(availableMotorVoltage.includes(voltage)) this.#motor_V = voltage;
+        if (availableMotorVoltage.includes(voltage)) this.#motor_V = voltage;
         else alert(`${voltage} is not a motor voltage!`);
     }
     set moveArm(distance) {
-        if(distance >= limitDistance[0] && distance <= limitDistance[1]) this.#port_Distance = distance;
+        if (distance >= limitDistance[0] && distance <= limitDistance[1]) this.#port_Distance = distance;
         else alert(`Please adjust distance between ${limitDistance[0]} and ${limitDistance[1]}`);
     }
     armOpen() {
         console.log(`Arm opening at port ${this.#port}`);
-        setTimeout(() => {this.armClose();},1500);
+        setTimeout(() => { this.armClose(); }, 1500);
     }
 
     armClose() {
         console.log(`Arm closing at port ${this.#port}`);
     }
-    
+
 }
 
 module.exports = Arm;
