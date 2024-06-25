@@ -50,6 +50,9 @@ class Arm {
     }
     armOpen() {
         console.log(`Arm opening at port ${this.#port}`);
+        exec('cansend can0 100#43114e2054657374', (err) => {
+            if (err) console.log(err);
+        })
         setTimeout(() => { this.armClose(); }, 1500);
     }
 

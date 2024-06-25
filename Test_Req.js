@@ -7,27 +7,27 @@ const event = require(`${__dirname}/event.js`);
 const PackageSchema = require(`${__dirname}/Schema.js`);
 require(`${__dirname}/PortEvent.js`)
 
-dotenv.config({path: './config.env'});
+dotenv.config({ path: './config.env' });
 
 const DB = process.env.DATABASE_LOCAL
-                .replace('<USER>',process.env.USR)
-                .replace('<PWD>',process.env.PASSWORD)
-                .replace('<DBS>',process.env.DATABASE);
+    .replace('<USER>', process.env.USR)
+    .replace('<PWD>', process.env.PASSWORD)
+    .replace('<DBS>', process.env.DATABASE);
 
 //console.log(DB);
 
 //---------------Connect to database-----------------
 mongoose
     .connect(DB)
-    .then(connect=> {
-    //console.log(connect.connections);
-    console.log("DB connected!");
-    //console.log(mongoose.package.find(id=1));
+    .then(connect => {
+        //console.log(connect.connections);
+        console.log("DB connected!");
+        //console.log(mongoose.package.find(id=1));
     });
 
 async function sort(id, res) {
-    const partner = await PackageSchema.findOne({pid: id});
-    if(partner == null) {
+    const partner = await PackageSchema.findOne({ pid: id });
+    if (partner == null) {
         res.status(400).json({
             status: "error",
             message: `No package with pid ${id}!`
@@ -45,8 +45,8 @@ async function sort(id, res) {
 }
 
 async function dbupdate(id, dPartner, res) {
-    const partner = await PackageSchema.findOne({pid: id});
-    if(partner == null) {
+    const partner = await PackageSchema.findOne({ pid: id });
+    if (partner == null) {
         const newPackage = new PackageSchema({
             pid: id,
             deliveryPartner: dPartner
@@ -72,13 +72,13 @@ async function dbupdate(id, dPartner, res) {
 
 // -------Get Delivery Partner from Package ID from server---------
 app.get('/api/package/:id', (req, res) => {
-    const id = req.params.id*1;
+    const id = req.params.id * 1;
     console.log("Requesting");
     sort(id, res);
 });
 
 app.get('/api/newpackage', (req, res) => {
-    const id = req.query.id*1;
+    const id = req.query.id * 1;
     const dPartner = req.query.dp;
     dbupdate(id, dPartner, res);
 })
