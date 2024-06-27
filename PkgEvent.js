@@ -25,11 +25,18 @@ function pkgMng(arm) {
 
 function armOpen(arm) {
     channel.send(arm.armOpenMsg());
-    arm.closeTimer = setTimeout(() => { armClose(arm); }, 1500);
+    arm.closeTimer = setTimeout(() => { armClose(arm); }, 1000);
 }
 
 function armClose(arm) {
-    channel.send(arm.armCloseMsg());
+    if (!arm.adjPkgCheck()) {
+        channel.send(arm.armCloseMsg());
+    }
+    else {
+        clearTimeout(arm.closeTimer);
+        console.log("Waiting for next package(s)...");
+    }
+
 }
 
 module.exports = event;

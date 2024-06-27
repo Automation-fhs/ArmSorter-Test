@@ -47,6 +47,9 @@ class Arm {
         //return (this.#port_Distance / conveyor.speed) * 1000 //Not yet fully implemented
         return 5000;
     }
+    get closeTimer() {
+        return this.#closeTimer;
+    }
     set newDeliveryPartner(deliveryPartner) {
         if (deliPartner.includes(deliveryPartner))
             this.#deli_ptnr = deliveryPartner;
@@ -66,6 +69,7 @@ class Arm {
     }
     set addPkgTimer(timerId) {
         this.pkgTimer.push(new PkgTimerObj(timerId, Date.now(), this.timeTrvlr));
+        //console.log(this.pkgTimer);
     }
 
     newCvyrSpdHndl() {
@@ -80,6 +84,24 @@ class Arm {
 
     reset() {
         this.pkgTimer.length = 0;
+    }
+
+    cnfHndl() {
+        clearTimeout(this.#errTimeout);
+    }
+
+    noCnfHndl() {
+        console.error("Arm not responding");
+        clearTimeout(this.#closeTimer);
+    }
+
+    adjPkgCheck() {
+        try {
+            //console.log(`Time to arive: ${(this.pkgTimer[0].arivetime() - Date.now()) <= (PARAM.PkgDistance / this.conveyorSpeed) * 1000} || Adjacent Time: ${(PARAM.PkgDistance / this.conveyorSpeed) * 1000}`);
+            if ((this.pkgTimer[0].ariveTime() - Date.now()) <= (PARAM.PkgDistance / this.conveyorSpeed) * 2000) return true;
+            else return false;
+        }
+        catch { return false; }
     }
 
     armOpenMsg() {
@@ -103,15 +125,8 @@ class Arm {
         }
         return msg_obj;
     }
-
-    cnfHndl() {
-        clearTimeout(this.#errTimeout);
-    }
-
-    noCnfHndl() {
-        console.error("Arm not responding");
-        clearTimeout(this.#closeTimer);
-    }
 }
+
+Arm.prototype.conveyorSpeed = 1;
 
 module.exports = Arm;

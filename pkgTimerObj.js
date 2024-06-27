@@ -7,6 +7,11 @@ class PkgTimerObj {
         this.startTime = startTime;
         this.duration = duration;
     }
+
+    ariveTime() {
+        return this.startTime + this.duration;
+    }
+
 }
 
 module.exports = PkgTimerObj;
