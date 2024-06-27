@@ -1,17 +1,5 @@
-const can = require("socketcan");
-const channel = can.createRawChannel("can0", true);
 const PARAM = require(`${__dirname}/params.js`)
 const arm = require(`${__dirname}/Arm.js`);
-//const { msg_Hndler } = require(`${__dirname}/CAN_msg_hndler.js`);
-
-channel.start();
-channel.send({
-    id: 0x0011,
-    length: 8,
-    data: Buffer.from([0x00, 0x00, 0x01, 0x03, 0x00, 0x00, 0x00, 0x00])
-});
-
-channel.addListener('onMessage', (msg) => { msg_Hndler(msg); });
 
 const msg_Hndler = (msg) => {
     if (msg.id == PARAM.Id.Center) { //Check if receiver is Center
@@ -36,6 +24,7 @@ function err_Hndler() {
 }
 
 function confirm_Hndler(armId) {
+    console.log(arm);
     arm[armId].cnfHndl();
 }
 
@@ -44,5 +33,4 @@ function armRes_Hndler() {
     //Confirm params change or get params from arm[armID]
 }
 
-
-module.exports = channel;
+module.exports = { msg_Hndler };

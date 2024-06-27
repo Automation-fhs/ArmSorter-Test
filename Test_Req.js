@@ -3,9 +3,11 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const express = require('express');
 const app = express();
+const { channel } = require(`${__dirname}/CAN_msg.js`);
+require(`${__dirname}/PkgEvent.js`)
 const event = require(`${__dirname}/event.js`);
 const PackageSchema = require(`${__dirname}/Schema.js`);
-require(`${__dirname}/PortEvent.js`)
+
 
 dotenv.config({ path: './config.env' });
 
@@ -21,6 +23,7 @@ mongoose
     .connect(DB)
     .then(connect => {
         //console.log(connect.connections);
+        console.log(Date.now());
         console.log("DB connected!");
         //console.log(mongoose.package.find(id=1));
     });
