@@ -11,11 +11,11 @@ class ConveyorEncoder {
         return this.#speed;
     }
 
-    set newCvyrSpd(speed) {
-        this.#speed = speed;
+    newCvyrSpd(speed) {
         arm.array.forEach(el => {
-            el.newCvyrSpdHndl();
+            el.newCvyrSpdHndl(this.#speed, speed);
         });
+        this.#speed = speed;
     }
 
     get encCanId() {

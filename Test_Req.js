@@ -38,7 +38,7 @@ async function sort(id, res) {
     }
     else {
         console.log(partner.deliveryPartner);
-        event.emit("armID", partner.deliveryPartner);
+        event.emit("armID", partner.deliveryPartner, id);
         res.status(200).json({
             status: "success",
             message: `Redirect package to ${partner.deliveryPartner}`

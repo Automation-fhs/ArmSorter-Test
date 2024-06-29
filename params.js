@@ -6,7 +6,8 @@ const PARAM = {
         GETparams: 0x03,
         SETparams: 0x04,
         ArmRes: 0x05,
-        TestCmd: 0x06
+        TestCmd: 0x06,
+        ArmSensor: 0x07
     },
     ErrCode: {
         MsgCodeFail: 0x00,
@@ -20,7 +21,12 @@ const PARAM = {
         Open: 0x01,
         Close: 0x00
     },
-    PkgDistance: 1
+    ArmParams: {
+        isSensor: 0x01,
+        ArmCloseTime: 1000
+    },
+    PkgDistance: 1,
+    PkgArvTimeout: 2000
 }
 
 module.exports = PARAM;

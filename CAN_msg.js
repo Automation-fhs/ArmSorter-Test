@@ -25,6 +25,9 @@ const msg_Hndler = (msg) => {
             case PARAM.MsgCode.ArmRes:
                 armRes_Hndler();
                 break;
+            case PARAM.MsgCode.ArmSensor:
+                armSensor_Hndler(arm[msg.data.toJSON().data[1]]);
+                break;
             default:
         }
     }
@@ -42,6 +45,25 @@ function confirm_Hndler(armId) {
 function armRes_Hndler() {
     //not yet implemented
     //Confirm params change or get params from arm[armID]
+}
+
+function armSensor_Hndler(arm) {
+    if (arm.waitForSensor && arm.pkgArriving) {
+        channel.send(arm.armOpenMsg());
+        arm.pkgArriving = false;
+        clearTimeout(arm.pkgArrvTimeout);
+        arm.closeTimer = setTimeout(() => { armClose(arm); }, PARAM.ArmParams.ArmCloseTime);
+    }
+}
+
+function armClose(arm) {
+    if (!arm.adjPkgCheck()) {
+        channel.send(arm.armCloseMsg());
+    }
+    else {
+        clearTimeout(arm.closeTimer);
+        console.log("Waiting for next package(s)...");
+    }
 }
 
 
