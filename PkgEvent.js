@@ -9,30 +9,57 @@ const channel = require(`${__dirname}/CAN_msg.js`);
 const conveyor = require(`${__dirname}/Conveyor.js`);
 
 //------------Emit Signal to port-------------
-event.on("armID", (partnerName, packageId) => {
-    const partner = partnerObj.find(el => el.partnerName === partnerName);
-    console.log(partner);
-    portNavigate(partner.port, packageId);
+// event.on("armID", (partnerName, packageId) => {
+//     const partner = partnerObj.find(el => el.partnerName === partnerName);
+//     console.log(partner);
+//     portNavigate(partner.port, packageId);
+// })
+
+event.on("armID", pkgInfo => {
+    const partner = partnerObj.find(el => el.partnerName === pkgInfo.partnerName);
+    console.log(partner.partnerName);
+    portNavigate(partner.port, pkgInfo);
 })
 
-function portNavigate(portId, packageId) {
+
+// function portNavigate(portId, packageId) {
+//     console.log(`Waiting for package navigate to port ${portId}`);
+//     if (arm[portId].pkgTimer.find((el) => el.packageId == packageId)) {
+//         console.log("Duplicate package error detected!!!");
+//     }
+//     else
+//         pkgMng(arm[portId], packageId);
+// }
+function portNavigate(portId, pkgInfo) {
     console.log(`Waiting for package navigate to port ${portId}`);
-    if (arm[portId].pkgTimer.find((el) => el.packageId == packageId)) {
+    if (arm[portId].pkgTimer.find((el) => el.packageId == pkgInfo.id)) {
         console.log("Duplicate package error detected!!!");
     }
     else
-        pkgMng(arm[portId], packageId);
+        pkgMng(arm[portId], pkgInfo);
 }
 
-function pkgMng(arm, packageId) {
+// function pkgMng(arm, packageId) {
+//     if (!arm.waitForSensor) {
+//         arm.addPkgTimer(setTimeout(() => {
+//             channel.send(arm.armOpenMsg());
+//             arm.closeTimer = setTimeout(() => { armClose(arm); }, PARAM.ArmParams.ArmCloseTime);
+//         }, arm.timeTrvlr), packageId);
+//     }
+//     else {
+//         arm.addPkgTimer(setTimeout(() => { arm.sensorWaiting(); }, arm.timeTrvlr - PARAM.PkgArvTimeout / 2), packageId);
+//     }
+// }
+
+function pkgMng(arm, pkfInfo) {
     if (!arm.waitForSensor) {
         arm.addPkgTimer(setTimeout(() => {
             channel.send(arm.armOpenMsg());
             arm.closeTimer = setTimeout(() => { armClose(arm); }, PARAM.ArmParams.ArmCloseTime);
-        }, arm.timeTrvlr), packageId);
+        }, arm.timeTrvlr), pkfInfo.id);
     }
     else {
-        arm.addPkgTimer(setTimeout(() => { arm.sensorWaiting(); }, arm.timeTrvlr - PARAM.PkgArvTimeout / 2), packageId);
+        arm.addPkgTimer(setTimeout(() => { arm.sensorWaiting(); }, arm.timeTrvlr - PARAM.PkgArvTimeout / 2), pkfInfo.id);
     }
 }
 
