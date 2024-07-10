@@ -7,6 +7,8 @@ const partnerObj = JSON.parse(partnerData);
 const arm = require(`${__dirname}/Arm.js`);
 const channel = require(`${__dirname}/CAN_msg.js`);
 const conveyor = require(`${__dirname}/Conveyor.js`);
+const logger = require(`${__dirname}/log/logger.js`);
+const dotenv = require('dotenv');
 
 //------------Emit Signal to port-------------
 // event.on("armID", (partnerName, packageId) => {
@@ -21,7 +23,6 @@ event.on("armID", pkgInfo => {
     portNavigate(partner.port, pkgInfo);
 })
 
-
 // function portNavigate(portId, packageId) {
 //     console.log(`Waiting for package navigate to port ${portId}`);
 //     if (arm[portId].pkgTimer.find((el) => el.packageId == packageId)) {
@@ -34,6 +35,7 @@ function portNavigate(portId, pkgInfo) {
     console.log(`Waiting for package navigate to port ${portId}`);
     if (arm[portId].pkgTimer.find((el) => el.packageId == pkgInfo.id)) {
         console.log("Duplicate package error detected!!!");
+        logger.warn(`Duplicate [PkgID:${pkgInfo.id}] on port ${portId}`);
     }
     else
         pkgMng(arm[portId], pkgInfo);
@@ -64,8 +66,13 @@ function pkgMng(arm, pkfInfo) {
 }
 
 function armClose(arm) {
-    if (!arm.adjPkgCheck()) {
+    arm.consPkg += 1;
+    if (!arm.adjPkgCheck() || arm.consPkg >= process.env.MAXCONSECUTIVEPACKAGE) {
         channel.send(arm.armCloseMsg());
+        for (var i = 0; i < arm.consPkg; i++) {
+            arm.sortCmplt();
+        }
+        arm.consPkg = 0;
     }
     else {
         clearTimeout(arm.closeTimer);

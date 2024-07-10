@@ -2,11 +2,13 @@ const fs = require('fs');
 const data = fs.readFileSync(`${__dirname}/data/Delivery_Partner.json`, 'utf-8');
 const dataObj = JSON.parse(data);
 const deliPartner = dataObj.map(el => { return el.partnerName });
+const logger = require(`${__dirname}/log/logger.js`);
 const { exec } = require('child_process');
 const { Console } = require('console');
 //const channel = require(`${__dirname}/CAN_msg.js`);
 const PARAM = require(`${__dirname}/params.js`);
 const PkgTimerObj = require(`${__dirname}/pkgTimerObj.js`);
+const socket = require(`${__dirname}/socket.js`);
 //const conveyor = require(`${__dirname}/Conveyor.js`)
 
 let availableMotorVoltage = [5, 9, 12, 24, 36, 48, 96, 110, 220];
@@ -19,7 +21,7 @@ class Arm {
     #deli_ptnr;
     #motor_V;
     #motor_Enc_Res;
-
+    consPkg;
     /*Flag indicate only-timer or timer-sensor mode 
     waiForSensor = true : timer-sensor mode */
     waitForSensor;
@@ -35,6 +37,8 @@ class Arm {
         this.#motor_Enc_Res = 1000;
         this.waitForSensor = false;
         this.pkgArriving = false;
+        this.consPkg = 0;
+        this.#port_Distance = 5 + Math.floor((this.#port - 1) / 2) * 2;
     }
     //Timer for multiple packages. Clear when Arm has successfully opened
     pkgTimer = [];
@@ -88,14 +92,18 @@ class Arm {
 
     newCvyrSpdHndl(newSpeed) {
         //Not yet implemented
-
+        for (const i = 0; i < this.pkgTimer.length; i++) {
+            const pkgObj = this.pkgTimer.shift();
+            this.addPkgTimer(setTimeout(() => { this.sensorWaiting(); }, (this.#port_Distance - (Date.now() - pkgObj.startTime) * PARAM.ArmParams.CnvySpd) * 1000 / newSpeed), pkgObj.packageId);
+        }
         //Re-set all timer in pckgTimer
     }
 
     sortCmplt() {
-        //Not yet fully implemented
-        clearTimeout(this.pkgTimer.shift().id);
-        //Send back to server + write log
+        const pkgTimer = this.pkgTimer.shift()
+        clearTimeout(pkgTimer.id);
+        logger.info(`[PkgID: ${pkgTimer.packageId}] sorted to port ${this.#port}`);
+        socket.emit('success', pkgTimer.packageId);
     }
 
     reset() {
@@ -108,13 +116,17 @@ class Arm {
 
     noCnfHndl() {
         console.error("Arm not responding");
+        const pkgInfo = this.pkgTimer.shift()
+        logger.error(`Failed to sort [PkgID: ${pkgInfo.packageId}] to port ${this.#port}`);
+        logger.error(`Port ${this.#port} not responding!!!`)
         clearTimeout(this.#closeTimer);
+        clearTimeout(pkgInfo.id);
+        socket.emit('err', pkgInfo.packageId);
     }
 
     adjPkgCheck() {
         try {
-            //console.log(`Time to arive: ${(this.pkgTimer[0].arivetime() - Date.now()) <= (PARAM.PkgDistance / this.conveyorSpeed) * 1000} || Adjacent Time: ${(PARAM.PkgDistance / this.conveyorSpeed) * 1000}`);
-            if ((this.pkgTimer[0].ariveTime() - Date.now()) <= (PARAM.PkgDistance / this.conveyorSpeed) * 2000) return true;
+            if ((this.pkgTimer[this.consPkg].ariveTime() - Date.now()) <= (PARAM.PkgDistance / this.conveyorSpeed) * 2000) return true;
             else return false;
         }
         catch { return false; }
@@ -124,11 +136,23 @@ class Arm {
         this.pkgArriving = true;
         this.pkgArrvTimeout = setTimeout(() => {
             this.pkgArriving = false;
-            this.pkgTimer.shift();
+            const pkgInfo = this.pkgTimer.shift();
+            logger.error(`Failed to sort [PkgID: ${pkgInfo.packageId}] to port ${this.#port}`);
+            logger.error(`No sensor signal detected on port ${this.#port}!!!`);
             console.log("Error: No sensor detected!");
-            //Not yet fully implemented
-            //Write log no sensor detected
         }, PARAM.PkgArvTimeout);
+    }
+
+    switchSensorUsage(isUse) {
+        for (const i = 0; i < this.pkgTimer.length; i++) {
+            const pkgObj = this.pkgTimer.shift();
+            try {
+                this.addPkgTimer(setTimeout(() => { this.sensorWaiting(); }, pkgObj.duration - (Date.now() - pkgObj.startTime) - (2 * isUse - 1) * PARAM.PkgArvTimeout / 2), pkgObj.packageId);
+            }
+            catch { };
+            this.waitForSensor = isUse;
+            console.log(this.waitForSensor);
+        }
     }
 
     armOpenMsg() {
@@ -139,9 +163,6 @@ class Arm {
             data: Buffer.from([0x00, PARAM.Id.Center, PARAM.MsgCode.CenterCmd, PARAM.CenterCmd.Open, 0x00, 0x00, 0x00, 0x00])
         }
         this.#errTimeout = setTimeout(() => { this.noCnfHndl(); }, 200);
-        this.sortCmplt();
-        //Not yet fully implemented
-        //Send message finish sorting package to server
         return msg_obj;
     }
 

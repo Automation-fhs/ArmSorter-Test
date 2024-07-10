@@ -19,6 +19,8 @@
     "rpio": "^2.4.2",
     "socket.io": "^4.7.5",
     "socket.io-client": "^4.7.5",
-    "socketcan": "^4.0.4"
+    "socketcan": "^4.0.4",
+    "winston": "^3.13.0",
+    "winston-daily-rotate-file": "^5.0.0"
   }
 }

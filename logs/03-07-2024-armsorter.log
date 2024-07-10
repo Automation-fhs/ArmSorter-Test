@@ -1,0 +1,21 @@
+[03/07/2024 10:06:30 AM] [33mwarn[39m:	[33mCan't find [PkgID:NoRead] info[39m
+[03/07/2024 10:06:30 AM] [31merror[39m:	[31mFailed to sort [PkgID: FAHASA072024/05] to port 3[39m
+[03/07/2024 10:06:30 AM] [31merror[39m:	[31mPort 3 not responding!!![39m
+[03/07/2024 10:06:38 AM] [32minfo[39m:	[32m[PkgID: FAHASA072024/01] sorted to port 1[39m
+[03/07/2024 10:06:38 AM] [32minfo[39m:	[32m[PkgID: FAHASA072024/02] sorted to port 1[39m
+[03/07/2024 10:06:41 AM] [32minfo[39m:	[32m[PkgID: FAHASA072024/07] sorted to port 1[39m
+[03/07/2024 10:06:44 AM] [31merror[39m:	[31mFailed to sort [PkgID: FAHASA072024/08] to port 4[39m
+[03/07/2024 10:06:44 AM] [31merror[39m:	[31mPort 4 not responding!!![39m
+[03/07/2024 10:07:40 AM] [32minfo[39m:	[32m[PkgID: FAHASA072024/07] sorted to port 1[39m
+[03/07/2024 10:07:43 AM] [32minfo[39m:	[32m[PkgID: FAHASA072024/01] sorted to port 1[39m
+[03/07/2024 10:07:45 AM] [31merror[39m:	[31mFailed to sort [PkgID: FAHASA072024/06] to port 4[39m
+[03/07/2024 10:07:45 AM] [31merror[39m:	[31mPort 4 not responding!!![39m
+[03/07/2024 10:07:47 AM] [31merror[39m:	[31mFailed to sort [PkgID: FAHASA072024/05] to port 3[39m
+[03/07/2024 10:07:47 AM] [31merror[39m:	[31mPort 3 not responding!!![39m
+[03/07/2024 10:07:49 AM] [31merror[39m:	[31mFailed to sort [PkgID: FAHASA072024/04] to port 4[39m
+[03/07/2024 10:07:49 AM] [31merror[39m:	[31mPort 4 not responding!!![39m
+[03/07/2024 10:07:51 AM] [32minfo[39m:	[32m[PkgID: FAHASA072024/02] sorted to port 1[39m
+[03/07/2024 10:07:53 AM] [31merror[39m:	[31mFailed to sort [PkgID: FAHASA072024/03] to port 3[39m
+[03/07/2024 10:07:53 AM] [31merror[39m:	[31mPort 3 not responding!!![39m
+[03/07/2024 10:07:55 AM] [31merror[39m:	[31mFailed to sort [PkgID: FAHASA072024/08] to port 4[39m
+[03/07/2024 10:07:55 AM] [31merror[39m:	[31mPort 4 not responding!!![39m

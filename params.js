@@ -3,11 +3,12 @@ const PARAM = {
         Error: 0x00,
         CenterCmd: 0x01,
         cmdConf: 0x02,
-        GETparams: 0x03,
-        SETparams: 0x04,
-        ArmRes: 0x05,
-        TestCmd: 0x06,
-        ArmSensor: 0x07
+        ArmSensor: 0x03,
+        GETparams: 0x04,
+        SETparams: 0x05,
+        ArmRespond: 0x06,
+        ArmConfChange: 0x07,
+        TestCmd: 0x08
     },
     ErrCode: {
         MsgCodeFail: 0x00,
@@ -22,11 +23,15 @@ const PARAM = {
         Close: 0x00
     },
     ArmParams: {
-        isSensor: 0x01,
+        conveyorSpeed: 0x00, //conveyor Speed
+        CnvySpd: 0,
+        isSensor: 0x01, //Check if arm is currently using sensor
         ArmCloseTime: 1000
     },
     PkgDistance: 1,
-    PkgArvTimeout: 2000
+    PkgArvTimeout: 2000,
+    maxConsPkg: 3,
+    pulleyRadius: 0.07
 }
 
 module.exports = PARAM;

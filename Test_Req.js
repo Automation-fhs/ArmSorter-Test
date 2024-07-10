@@ -7,14 +7,17 @@ const { channel } = require(`${__dirname}/CAN_msg.js`);
 require(`${__dirname}/PkgEvent.js`)
 const event = require(`${__dirname}/event.js`);
 const PackageSchema = require(`${__dirname}/Schema.js`);
+const socket = require(`${__dirname}/socket.js`);
 
 //-----------------------SOCKET IO-----------------------
-const io = require('socket.io-client');
-const serverURL = "http://172.27.1.38:1605";//process.env.SERVERURL;
-const socket = io.connect(serverURL);
+// const io = require('socket.io-client');
+// const serverURL = "http://172.27.1.38:1605";//process.env.SERVERURL;
+// const socket = io.connect(serverURL);
+
 
 //-----------------------TCP SERVER BARCODE READER-----------------------
 const net = require('net');
+const logger = require('./log/logger');
 const server = net.createServer((socket) => {
     console.log("Client connected");
     socket.on('data', (data) => {
@@ -138,19 +141,18 @@ function sort(pkgInfo) {
 }
 
 // ------Socket IO Connect to server
-socket.on("connect", () => {
-    console.log("Connected to server");
-})
+// socket.on("connect", () => {
+//     console.log("Connected to server");
+// })
 
-socket.on('disconnect', () => {
-    console.log("Disconnected from server");
-})
+// socket.on('disconnect', () => {
+//     console.log("Disconnected from server");
+// })
 
 socket.on('port', (pkgInfo) => {
-    if (pkgInfo == null) {
-        //Error log
-    }
-    else {
-        sort(pkgInfo);
-    }
+    sort(pkgInfo);
+})
+
+socket.on('err', (barcode) => {
+    logger.warn(`Can't find [PkgID:${barcode}] info`);
 })

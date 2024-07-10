@@ -1,0 +1,40 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 90
+    },
+    "auditLog": "logs/.117f1de0e94f8dfd43dfc9c0f497b7774007a161-audit.json",
+    "files": [
+        {
+            "date": 1719914189081,
+            "name": "logs/02-07-2024-armsorter.log",
+            "hash": "8d80fcdc283710828b192f19d2e4286f4deadef25374e968c308515dded551a8"
+        },
+        {
+            "date": 1719975083427,
+            "name": "logs/03-07-2024-armsorter.log",
+            "hash": "012cebb896584c6ef2aecdd8f6d1cb7eb66b1825019b1eaa601a2e153baf82ed"
+        },
+        {
+            "date": 1720065689217,
+            "name": "logs/04-07-2024-armsorter.log",
+            "hash": "1648a94e7fa437aef816797ae8503bd9be5e040f0e86813d66cf56b162d88e73"
+        },
+        {
+            "date": 1720153394223,
+            "name": "logs/05-07-2024-armsorter.log",
+            "hash": "713ff02d881b540f923085e22dd545cdf9ee2a7cf8562a9eb9fe8e827c3294cb"
+        },
+        {
+            "date": 1720227993376,
+            "name": "logs/06-07-2024-armsorter.log",
+            "hash": "99adbe52339abc3eb54f44e1ac8e697f99689998567cd239e3cb023595d64355"
+        },
+        {
+            "date": 1720403079895,
+            "name": "logs/08-07-2024-armsorter.log",
+            "hash": "f0d3d0d5d49d0a01cee1cb892a99789c166ff6a367df053b3943fb94d8e1e18b"
+        }
+    ],
+    "hashType": "sha256"
+}
